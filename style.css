@@ -1,0 +1,112 @@
+html{
+  margin: 0;
+  height: 100%;
+}
+body{
+  font-family: Verdana;
+  margin: 0;
+  height: 100%;
+  min-height: 500px;
+  min-width: 500px;
+  background-color: rgb(255, 248, 220);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+h1{
+  padding: 0;
+  margin: 0 10px;
+  /* detph visual efect */
+  background-color: black;
+  color: transparent;
+  text-shadow: 0px 2px 3px rgba(255,255,255,0.35);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+}
+.settings{
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  background-color: rgba(100, 149, 237,0.975);
+  top: 0;
+  z-index: 2;
+  border-right: 5px solid black;
+  border-bottom: 5px solid black;
+  border-left: 5px solid black;
+  border-radius: 0 0 15px 15px;
+  flex: 0 1 content;
+  min-height: 75px;
+}
+.settings_hidden{
+  display: none;
+  flex-flow: column;
+  align-items: center;
+  min-width: 400px;
+}
+label{
+  margin-bottom: 5px;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+input[type="number"]{
+  width: 40px;
+}
+input[type="range"]{
+  margin: 5px 5px 5px 5px;
+  width: 80%;
+}
+.input-field{
+  margin-bottom: 10px;
+}
+#menu_img{
+  width: 50px;
+  position: relative;
+  transition: 0.5s;
+  transform-origin: 50% 40%;
+  cursor: pointer;
+}
+.footer_text{
+  font-weight: bold;
+}
+.footer_text a{
+  text-decoration: none;
+}
+.footer_text a:hover{
+  text-decoration: underline;
+}
+.footer_text a:active{
+  font-style: italic;
+}
+.footer_text a:visited{
+  color: black;
+}
+#footer_text_desctop{
+  display: none;
+  margin-top: -15px;
+  margin-bottom: 5px;
+}
+#footer_text_mobile{
+  display: none;
+  font-size: 2.5em;
+  margin-bottom: 25px;
+}
+.container{
+  width: 100%;
+  flex: 1 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+canvas{
+  background: rgb(100,100,100)
+    radial-gradient(circle at 0 0, rgba(255,255,255,.65),
+                    rgba(255,255,255,.35));
+  box-shadow:
+    /*initial value*/
+    inset rgba(0,0,0,.5) -3px -3px 8px,
+    inset rgba(255,255,255,.9) 3px 3px 8px,
+    rgba(0,0,0,.8) 3px 3px 25px -3px;
+}
