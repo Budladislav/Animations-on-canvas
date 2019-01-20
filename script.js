@@ -7,6 +7,7 @@ let o_GlobalVariable = {
   nAnimationRadius: null,
   nIntervalId: null, //need for set and stop function of animate
   nAnimationsVelosity: null,
+  nFillColor: null,
   bEggLightOn: false
 }
 
@@ -91,7 +92,8 @@ let fAppendCanvas = (resize) => {
   o_GlobalVariable.nAnimationRadius = o_GlobalVariable.nCanvasSide / 25;
 
   if (s_Animation === 'bee'){
-    o_GlobalVariable.canvasContext.fillStyle = 'gold';
+    o_GlobalVariable.nFillColor = 'gold';
+    o_GlobalVariable.canvasContext.fillStyle = o_GlobalVariable.nFillColor;
     let nCountOfBees = n_CountOfAnimations;
     let aBeesCoordinats = []; /*[№ofBee][0] - X [№ofBee][1] - Y*/
     let i = 0;
@@ -106,12 +108,18 @@ let fAppendCanvas = (resize) => {
     }
     fAnimateBees(aBeesCoordinats);
   } else if (s_Animation = 'ball') {
-    o_GlobalVariable.canvasContext.fillStyle = 'black';
+    o_GlobalVariable.nFillColor = 'black';
+    o_GlobalVariable.canvasContext.fillStyle = o_GlobalVariable.nFillColor;
     let nCountOfBalls = n_CountOfAnimations;
     let aBallsObjects = [];
     let i = 0;
     for (; i < nCountOfBalls; i++){
-      aBallsObjects[i] = new Ball();
+      if (nCountOfBalls < 25){ //(50 max)
+        aBallsObjects[i] = new Ball(); //black balls
+      } else {
+        aBallsObjects[i] = new Ball(getRandomColor() ); // random color balls
+      }
+
     }
     fAnimateBalls(aBallsObjects);
   }
@@ -143,11 +151,15 @@ let fAdapteForMobile = () => {
   $("#canvas_place").on('touchend', hCanvasPressEnd);
 }
 
-let fDrawCircle = (Xcenter,Ycenter,radius,fill) => {
+let fDrawCircle = (Xcenter,Ycenter,radius,fill,fillColor) => {
   if (fill === undefined) fill = false;
   if (radius === undefined) return;
   if (Xcenter === undefined) Xcenter = 0;
   if (Ycenter === undefined) Ycenter = 0;
+  if (fillColor === undefined){
+    fillColor = o_GlobalVariable.nFillColor;
+  } else o_GlobalVariable.canvasContext.fillStyle = fillColor;
+
   o_GlobalVariable.canvasContext.beginPath();
   o_GlobalVariable.canvasContext.arc(Xcenter, Ycenter, radius, 0, Math.PI * 2);
   (fill) ? o_GlobalVariable.canvasContext.fill() : o_GlobalVariable.canvasContext.stroke();
@@ -210,6 +222,12 @@ let fUpdateBeeCoordinate = (coordinate) => {
   return Math.floor(coordinate);
 }
 
+//auxilary function for ball fill
+let getRandomColor = () => {
+  let colors = ["Red", "Orange", "Yellow", "Green", "Blue", "Purple"];
+  return colors[Math.floor( Math.random() * colors.length)];
+}
+
 //update all coordinates in array of balls and redraw it on canvas
 let fAnimateBalls = (ArrayWithObjects) => {
   o_GlobalVariable.nIntervalId = setInterval( () => {
@@ -236,6 +254,7 @@ let fCanvasBlink = () => {
   $("canvas").css('box-shadow', s_EFFECT);
   setTimeout( () => {$("canvas").css('box-shadow', s_INITIAL);} ,100);
 }
+
 let fRemoveCurentCanvas = () => {
   clearInterval(o_GlobalVariable.nIntervalId);
   $("canvas").remove();
@@ -382,18 +401,25 @@ $("#canvas_place").on('mouseup', hCanvasPressEnd); //replase on touchend when mo
 /* CONSTRUCTORS */
 
 //add object ball with coordinates center of canvas and random direction
-let Ball = function() {
+let Ball = function(color) {
   this.x = o_GlobalVariable.nCanvasSide / 2;
   this.y = o_GlobalVariable.nCanvasSide / 2;
   this.direction = this.fRandomMoveDirection();
+  if (color === undefined){
+    this.ballColor = 'black';
+  } else {
+    this.ballColor = color;
+  }
 }
+
+Ball.prototype.ballColor = 'black';
 /* CONSTRUCTORS end */
 
 /* PROTOTYPE PROPERTYS */
 
 //draw filled black ball. false - only contour of ball 
 Ball.prototype.draw = function () {
-  fDrawCircle(this.x, this.y, o_GlobalVariable.nAnimationRadius, true);
+  fDrawCircle(this.x, this.y, o_GlobalVariable.nAnimationRadius, true, this.ballColor);
 }
 
 //change x and y coordinates of ball on directionX and directionY value respectively
@@ -408,14 +434,14 @@ Ball.prototype.checkCollision = function () {
   let radius = o_GlobalVariable.nAnimationRadius;
   if (this.x + radius > o_GlobalVariable.nCanvasSide || this.x - radius < 0){
     this.direction[0] = -this.direction[0];
-    if (!o_GlobalVariable.bEggLightOn)
-      fCanvasBlink();
+    // if (!o_GlobalVariable.bEggLightOn)
+    //   fCanvasBlink();
   }
     
   if (this.y + radius > o_GlobalVariable.nCanvasSide || this.y - radius < 0){
     this.direction[1] = -this.direction[1];
-    if (!o_GlobalVariable.bEggLightOn)
-      fCanvasBlink();
+    // if (!o_GlobalVariable.bEggLightOn)
+    //   fCanvasBlink();
   }
 }
 
